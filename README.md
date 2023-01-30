@@ -1,2 +1,2 @@
 # Grit-lab
-Projects from studying at Grit:lab
+Projects during studies at Grit:lab
