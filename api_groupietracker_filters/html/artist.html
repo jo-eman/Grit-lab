@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        * {
+            content: center;
+            text-align: center;
+        }
+        body {
+            background-image: linear-gradient(to bottom right, rgb(224, 213, 150), rgb(242, 242, 236));
+            height: 100vh;
+        }
+    </style>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Details</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+    <link href='https://cdn.jsdelivr.net/npm/css.gg/icons/all.css' rel='stylesheet'>
+    <link rel="icon" type="image/x-icon" href="/src/favicon/img_99019.ico">
+</head>
+<body>
+    <div class="block" >
+        <div class="columns is-mobile is-centered" class="has-background-light">
+       
+    <div class="card">
+        <div class="card-content" >
+            <p class="is-size-4" ><a href="/"><strong>Go Back</strong></a></p>
+    <img src="{{ .Image }}"><br>
+    Name: {{ .Name }}<br>
+    <p>{{ $lenMembers := len .Members }}
+        {{ if gt $lenMembers 0 }}
+        Band members: {{ range  $i, $e := .Members }}{{ if $i }}, {{ end }}{{ $e }}{{ end }}.
+        {{ else }}
+        {{ end }}
+    </p><br>
+    Creation date: {{ .CreationDate }}<br>
+    First album: {{ .FirstAlbum }}<br>
+    Concerts: {{ range $key, $value := .DatesLocations}}<br>
+    {{ $key }}<br>
+    {{ range $value }}
+    {{ . }}<br>
+   
+    
+    {{ end }}
+    {{ end }}
+    <br>
+    You are now on the details page
+        </div>
+    </div>
+</div>
+</body>
+</html>

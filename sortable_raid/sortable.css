@@ -1,0 +1,56 @@
+body {
+    background:rgb(62, 85, 62)
+}
+
+tr, td {
+    /* border: 1px solid; */
+    border: 0px solid;
+    border-bottom: 3px solid;
+    font-family: "Arial"
+}
+
+.hidden {
+    display: none;
+}
+
+.pageHidden {
+    display: none;
+}
+
+.headBar {
+    display: block;
+    align-content: center;
+    padding-bottom: 5px;
+}
+
+.headBarElement {
+    vertical-align: middle;
+    display: inline-block;
+    border-radius: 5px;
+    background-color: rgb(146, 172, 146);
+}
+
+.headBarLabel {
+    padding-left: 2rem;
+    padding-right: 1rem;
+    font-weight: bold;
+    color: rgb(97, 222, 124);
+    text-shadow: 2px 2px 2px rgb(0, 15, 1);
+}
+
+/* sticky row at the top*/
+.sticky {
+    position: -webkit-sticky; /* Safari */
+    position: sticky;
+    top: 0;
+    background-color: rgb(77, 183, 77);
+}
+
+td:active {
+    border: 2px solid;
+    transition: 100ms;
+}
+
+.row {
+    background-color: rgb(143, 197, 143);
+}

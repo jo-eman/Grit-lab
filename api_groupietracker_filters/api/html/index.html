@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+        <link href='https://cdn.jsdelivr.net/npm/css.gg/icons/all.css' rel='stylesheet'>
+        <link rel="icon" type="image/x-icon" href="/src/favicon/img_99019.ico">
+        <title>Artists</title>
+        <style>
+            * {
+                text-align: center;
+                content: center;
+            }
+            body {
+            background-image: linear-gradient(to bottom right, rgb(224, 213, 150), rgb(242, 242, 236));
+            min-height: 100vh;
+            }
+
+            .block {
+                align-items: center;
+            }
+        </style>
+      </head>
+
+<body>
+    <header>
+    <p class="title">Groupie Tracker Main Page</p>
+    <div>
+        <label for="max_members">Filter by number of band members:</label>
+        <input type="checkbox" id="max_members_1" name="max_members" value="1" checked>1
+        <input type="checkbox" id="max_members_2" name="max_members" value="2" checked>2
+        <input type="checkbox" id="max_members_3" name="max_members" value="3" checked>3
+        <input type="checkbox" id="max_members_4" name="max_members" value="4" checked>4
+        <input type="checkbox" id="max_members_5" name="max_members" value="5" checked>5
+        <input type="checkbox" id="max_members_6" name="max_members" value="6" checked>6
+        <input type="checkbox" id="max_members_7" name="max_members" value="7" checked>7
+        <input type="checkbox" id="max_members_8" name="max_members" value="8" checked>8
+    </div>
+    <div>
+        <label for="creation_year">Filter by creation year 1950-2022:</label><br>
+        <p>Min</p><input type="range" id="creation_year_min" name="creation_year_min" min="1950" max="2022" oninput="this.nextElementSibling.value = this.value">
+        <output>1950</output>
+        <p>Max</p><input type="range" id="creation_year_max" name="creation_year_max" min="1950" max="2022" oninput="this.nextElementSibling.value = this.value">
+        <output>2022</output>
+    </div>
+    <div>
+        <label for="first_album_year">Filter by first album year 1950-2022:</label><br>
+        <p>Min</p><input type="range" id="first_album_year_min" name="first_album_year_min" min="1950" max="2022" oninput="this.nextElementSibling.value = this.value">
+        <output>1950</output>
+        <p>Max</p><input type="range" id="first_album_year_max" name="first_album_year_max" min="1950" max="2022" oninput="this.nextElementSibling.value = this.value">
+        <output>2022</output>
+    </div>
+    <p>Adjust the sliders before applying filter</p>
+
+                
+                
+
+    <button onclick="filterArtists()">Apply Filter</button><br>
+    <p>Concert locations:</p>
+    <div class="dropdown">
+        <div class="dropdown-trigger">
+            <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
+                <span>Filter by country</span>
+                <span class="icon is-small">
+                    <i class="gg-chevron-down" aria-hidden="true"></i>
+                </span>
+            </button>
+        </div>
+        <div class="dropdown-menu" id="dropdown-menu" role="menu">
+            <div class="dropdown-content">
+                <div class="dropdown-item">
+                    <a href="#" class="dropdown-item">
+                      </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="dropdown is-hoverable">
+        <div class="dropdown-trigger">
+            <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
+                <span>Filter by State/City</span>
+                <span class="icon is-small">
+                    <i class="gg-chevron-down" aria-hidden="true"></i>
+                </span>
+            </button>
+        </div>
+        <div class="dropdown-menu" id="dropdown-menu" role="menu">
+            <div class="dropdown-content-statecity">
+                <div class="dropdown-item">
+                    <a href="#" class="dropdown-item">
+                      </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+
+    
+    
+    
+</header>
+
+
+<div class="block">
+    <div class="columns is-multiline">
+            {{range . }}
+
+            
+        <div class="column is-one-third">
+          <div class="card">
+            <div class="artist-card" data-members="{{ len .Members }}" creationYear="{{ .CreationDate }}" firstAlbum="{{ .FirstAlbumYear }}" locations="{{ .OnlyLocations }}"></div>
+            <div class="card-content" class="has-text-black">
+                
+            <p class="title"><a class="has-text-black" href="/artist?id={{ .ID }}">{{ .Name }}</a></p>
+            <p><a class="has-text-black" href="/artist?id={{ .ID }}">Click here to go to {{ .Name }}s details page</p></a><br>
+            <img src="{{.Image}}">
+
+        </div>
+</div>
+
+    </div>
+
+    {{end}}
+
+    <script>
+        var dropdown = document.querySelector('.dropdown');
+dropdown.addEventListener('click', function(event) {
+  event.stopPropagation();
+  dropdown.classList.toggle('is-active');
+});
+
+        const checkboxes = document.querySelectorAll("input[name='max_members']");
+        const creationYearSelectorMin = document.querySelector("input[name='creation_year_min']");
+        const creationYearSelectorMax = document.querySelector("input[name='creation_year_max']");
+        const firstAlbumYearSelectorMin = document.querySelector("input[name='first_album_year_min']");
+        const firstAlbumYearSelectorMax = document.querySelector("input[name='first_album_year_max']");
+        const artistCards = document.querySelectorAll(".artist-card");
+        const countryArray = [];
+        const stateCityArray = [];
+        var selectedCountry = "";
+        var countryIsSelected = false;
+        var selectedStateCity = "";
+        var stateCityIsSelected = false;
+        for (let artistCard of artistCards) {
+            let locations = artistCard.getAttribute("locations");
+            //split locations by space
+            let locationsSplit = locations.split(" ");
+            //split every element by - and push last element to countryArray
+            for (let element of locationsSplit) {
+                let country = element.split("-")[1];
+                //remove ] if present in country
+                if (country.includes("]")) {
+                    country = country.replace("]", "");
+                }
+                if (!countryArray.includes(country)) {
+                    countryArray.push(country);
+                }
+                let stateCity = element.split("-")[0];
+                //remove [ if present in stateCity
+                if (stateCity.includes("[")) {
+                    stateCity = stateCity.replace("[", "");
+                }
+                if (!stateCityArray.includes(stateCity)) {
+                    stateCityArray.push(stateCity);
+                }
+            }
+
+            
+        }
+        var dropdownContent2 = document.getElementsByClassName("dropdown-content")[0];
+            for (var i = 0; i < countryArray.length; i++) {
+                var country = countryArray[i];
+                var a = document.createElement("a");
+                a.href = "#";
+                a.className = "dropdown-item";
+                a.innerHTML = country;
+                dropdownContent2.appendChild(a);
+                //add event listener to each country
+                a.addEventListener("click", function() {
+                    //get country name
+                    var countryName = this.innerHTML;
+                    //get all artist cards
+                    var artistCards = document.getElementsByClassName("artist-card");
+                    selectedCountry = countryName;
+                    countryIsSelected = true;
+
+
+                    //set is-active class to dropdown
+                    this.parentElement.parentElement.parentElement.classList.add("is-active");
+                    // close menu after click
+                    this.parentElement.parentElement.classList.remove("is-active");
+                    //show selected country in dropdown
+                    this.parentElement.parentElement.previousElementSibling.firstElementChild.innerHTML = countryName;
+                });
+            }
+            var dropdownContent = document.getElementsByClassName("dropdown-content-statecity")[0];
+            for (var i = 0; i < stateCityArray.length; i++) {
+                var stateCity = stateCityArray[i];
+                var a = document.createElement("a");
+                a.href = "#";
+                a.className = "dropdown-item";
+                //background color white
+                a.style.backgroundColor = "white";
+                
+                a.innerHTML = stateCity;
+                dropdownContent.appendChild(a);
+                //add event listener to each country
+                a.addEventListener("click", function() {
+                    //get country name
+                    var stateCityName = this.innerHTML;
+                    selectedStateCity = stateCityName;
+                    stateCityIsSelected = true;
+                    //set is-active class to dropdown
+                    this.parentElement.parentElement.parentElement.classList.add("is-active");
+                    // close menu after click
+                    this.parentElement.parentElement.classList.remove("is-active");
+                    //hide menu after click
+                    this.parentElement.parentElement.parentElement.classList.remove("is-active");
+                    //show selected value in dropdown
+                    this.parentElement.parentElement.previousElementSibling.firstElementChild.innerHTML = stateCityName;
+                    //set background color to white
+                    this.parentElement.parentElement.previousElementSibling.firstElementChild.style.backgroundColor = "white";
+                    
+                });
+            }
+        
+
+        
+        
+    function filterArtists() {
+
+        let filterValue = [];
+        for (let checkbox of checkboxes) {
+            if (checkbox.checked) {
+
+                filterValue.push(Number(checkbox.value));
+                
+            }
+        }
+        let yearRangeMin = Number(creationYearSelectorMin.value);
+        let yearRangeMax = Number(creationYearSelectorMax.value);
+        let firstAlbumRangeMax = Number(firstAlbumYearSelectorMax.value);
+        let firstAlbumRangeMin = Number(firstAlbumYearSelectorMin.value);
+        
+
+        
+        for (let artistCard of artistCards) {
+            let members = Number(artistCard.getAttribute("data-members"));
+            let artistCreationYear = Number(artistCard.getAttribute("creationYear"));
+            let artistFirstAlbumYear = Number(artistCard.getAttribute("firstAlbum"));
+            
+            if (filterValue.includes(members)) {
+                if (yearRangeMax >= artistCreationYear && yearRangeMin <= artistCreationYear) {
+
+                   if (firstAlbumRangeMax >= artistFirstAlbumYear && firstAlbumRangeMin <= artistFirstAlbumYear) {
+                    if (countryIsSelected) {
+                        let locations = artistCard.getAttribute("locations");
+                        if (locations.includes(selectedCountry)) {
+                            if (stateCityIsSelected) {
+                                if (locations.includes(selectedStateCity)) {
+                                    artistCard.parentElement.parentElement.style.display = "block";
+                                } else {
+                                    artistCard.parentElement.parentElement.style.display = "none";
+                                }
+                            } else {
+                                artistCard.parentElement.parentElement.style.display = "block";
+                            }
+                        } else {
+                            artistCard.parentElement.parentElement.style.display = "none";
+                        }
+                    } else {
+                        artistCard.parentElement.parentElement.style.display = "block";
+                    }
+                     } else {
+                        artistCard.parentElement.parentElement.style.display = "none";
+                     }
+                } else {
+                    artistCard.parentElement.parentElement.style.display = "none";
+                }
+            } else {
+                artistCard.parentElement.parentElement.style.display = "none";
+            }                        
+                        
+        }
+    }
+    
+
+
+
+    </script>
+    
+</body>
+
+</html>

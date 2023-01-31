@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>HackerNews API</title>
+  <style>
+    #posts {
+      width: 50%;
+      margin: 0 auto;
+    }
+    #load-more {
+      display: block;
+      margin: 0 auto;
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      margin-bottom: 10px;
+
+
+    }
+    #posts > div {
+      border: 1px solid #ccc;
+      padding: 10px;
+      margin-bottom: 10px;
+      background-color: lightcyan;
+    }
+
+    .notification {
+      position: sticky;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background-color: yellow;
+      padding: 10px;
+      text-align: center;
+    }
+    .newsTitle {
+      text-align: center;
+    }
+
+    .comment {
+      border: 1px solid #ccc;
+      padding: 10px;
+      margin-bottom: 10px;
+      background-color: lightskyblue;
+    }
+
+
+    #navigation {
+      display: flex;
+      justify-content: center;
+      margin-top: 50px;
+    }
+
+    .option {
+      margin: 0 10px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      cursor: pointer;
+      background-color: lightblue;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+    }
+
+  </style>
+</head>
+<body>
+    <div class="newsTitle">
+        <h1>HackerNews API</h1>
+    </div>
+    <div id="navigation">
+        <button id="newest">Stories</button>
+        <button id="polls">Polls</button>
+        <button id="jobs">Jobs</button>
+    </div>
+
+  <div id="posts">
+    <!-- Posts will be loaded here -->
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+  <script>
+    // JavaScript code to handle UI interactions and API calls
+    const postsContainer = document.getElementById("posts");
+
+    let start = 10;
+    let end = 20;
+    let currentPostIds = {};
+    let currentPostData = [];
+    let newPostData = [];
+    let buttonType = "";
+    let buttonFetch = true; // boolcheck to only fetch first 10 posts on page load
+
+  const loadPosts = (buttonType) => {
+    console.log(buttonType)
+    const navigation = document.getElementById("navigation");
+    if (buttonType === "poll") {
+      buttonFetch = true;
+
+      
+      jobs.removeAttribute("disabled");
+      let newestButton = document.getElementById("newest");
+      newestButton.removeAttribute("disabled");
+
+      
+      polls.setAttribute("disabled", true);
+      
+      createPostElements("poll");
+
+    } else if (buttonType === "job") {
+      buttonFetch = true;
+      
+
+      polls.removeAttribute("disabled");
+      newest.removeAttribute("disabled");
+      jobs.setAttribute("disabled", true);
+
+      createPostElements("job");
+
+
+      
+    } else if (buttonType === "newest") {
+      //reload page
+      
+      if (polls.disabled || jobs.disabled) {
+        location.reload();
+        polls.removeAttribute("disabled");
+        jobs.removeAttribute("disabled");
+        newest.setAttribute("disabled", true);
+        loadPosts("newest");
+      }
+      console.log("current", currentPostData)
+      currentPostData = sortData(currentPostData);
+      createPostElements("story");
+
+      const loadMoreButton = document.createElement("button");
+      loadMoreButton.id = "load-more";
+      loadMoreButton.innerText = "Load More Posts";
+      postsContainer.appendChild(loadMoreButton);
+
+      loadMoreButton.addEventListener("click", () => {
+        console.log("load-more");
+        loadPosts("load-more");
+        
+      });
+
+
+
+      
+    } else if (buttonType === "load-more") {
+      currentPostData = sortData(currentPostData);
+      createPostElements("story");
+      start = end;
+      end = start + 10;
+
+    } else {
+      fetch(`https://hacker-news.firebaseio.com/v0/item/33480849.json`).then((postRes) => postRes.json()).then((postData) => {
+          if (postData) {
+            currentPostIds[postData.id] = postData.id;
+            if (postData.type === "story" || postData.type === "job" || postData.type === "poll") {
+              currentPostData.push(postData)
+            }
+          }
+      });
+      if (buttonFetch) {
+        fetch(`https://hacker-news.firebaseio.com/v0/newstories.json?print=pretty`).then((res) => res.json()).then((data) => {
+        data.slice(0, 10).forEach((postId) => {
+          fetch(`https://hacker-news.firebaseio.com/v0/item/${postId}.json`).then((postRes) => postRes.json()).then((postData) => {
+            if (postData) {
+              currentPostIds[postData.id] = postData.id;
+              if (postData.type === "story" || postData.type === "job" || postData.type === "poll") {
+                currentPostData.push(postData)
+              }
+            }
+          });
+        });
+      });
+      
+
+        
+        buttonFetch = false;
+      } else {
+      fetch(`https://hacker-news.firebaseio.com/v0/newstories.json?print=pretty`).then((res) => res.json()).then((data) => {
+        data.slice(start, end).forEach((postId) => {
+          fetch(`https://hacker-news.firebaseio.com/v0/item/${postId}.json`).then((postRes) => postRes.json()).then((postData) => {
+            if (postData) {
+              currentPostIds[postData.id] = postData.id;
+              if (postData.type === "story" || postData.type === "job" || postData.type === "poll") {
+                currentPostData.push(postData)
+              }
+            }
+          });
+        });
+      });
+    
+    fetch(`https://hacker-news.firebaseio.com/v0/jobstories.json?print=pretty`).then((res) => res.json()).then((data) => {
+        data.slice(start, end).forEach((postId) => {
+          fetch(`https://hacker-news.firebaseio.com/v0/item/${postId}.json`).then((postRes) => postRes.json()).then((postData) => {
+            if (postData) {
+              currentPostIds[postData.id] = postData.id;
+              if (postData.type === "job") {
+                console.log("job detected" + postData)
+                currentPostData.push(postData)
+              }
+            }
+          });
+        });
+      });
+    }
+
+      
+
+    }
+    currentPostData = sortData(currentPostData);
+  }
+
+  const sortArr = (arr) => {
+    for (let i = 0; i < arr.length - 1; i++) {
+      for (let j = i + 1; j < arr.length; j++) {
+        if (arr[i].toString().localeCompare(arr[j].toString()) === -1) {
+          let temp = arr[i];
+          arr[i] = arr[j];
+          arr[j] = temp;
+        }
+      }
+    }
+    return arr;
+  }
+
+  Element.prototype.insertChildAtIndex = function(child, index) {
+    if (!index) index = 0
+    if (index >= this.children.length) {
+      this.appendChild(child)
+    } else {
+      this.insertBefore(child, this.children[index])
+    }
+  }
+
+  const sortNewData = (data) => {
+    for (let i = 0; i < data.length - 1; i++) {
+      for (let j = i + 1; j < data.length; j++) {
+        if (data[i].time > data[j].time) {
+          let temp = data[i];
+          data[i] = data[j];
+          data[j] = temp;
+        }
+      }
+    }
+    return data;
+  }
+
+  const sortData = (data) => {
+    //remove duplicates
+    for (let i = 0; i < data.length - 1; i++) {
+      for (let j = i + 1; j < data.length; j++) {
+        if (data[i].id === data[j].id) {
+          data.splice(j, 1);
+        }
+      }
+    }
+
+    for (let i = 0; i < data.length - 1; i++) {
+      for (let j = i + 1; j < data.length; j++) {
+        if (data[i].time < data[j].time) {
+          let temp = data[i];
+          data[i] = data[j];
+          data[j] = temp;
+        }
+      }
+    }
+    
+    return data;
+  }
+
+  const checkForNewPosts = () => {
+    fetch(`https://hacker-news.firebaseio.com/v0/newstories.json?print=pretty`).then((res) => res.json()).then((data) => {
+      const newestPostIds = data.slice(0, 10);
+      //check if curremtPostIds does not include any of the newestPostIds
+      const hasNewPosts = newestPostIds.some((postId) => !Object.values(currentPostIds).includes(postId));
+      if (hasNewPosts) {
+
+        //if different, get new posts and append them to the top of the page
+        const newPosts = newestPostIds.filter((postId) => !Object.values(currentPostIds).includes(postId));
+        newPosts.forEach((postId) => {
+            fetch(`https://hacker-news.firebaseio.com/v0/item/${postId}.json`).then((postRes) => postRes.json()).then((postData) => {
+              if (postData) {
+                currentPostIds[postData.id] = postData.id;
+                if (postData.type === "story" || postData.type === "job" || postData.type === "poll") {
+                  newPostData.push(postData);
+                }
+              }
+            });
+        });
+
+        newPostData = sortNewData(newPostData);
+        createNewPostElements();
+      }
+    });
+  };
+
+  const createPostElements = (postType) => {
+    currentPostData.forEach((postData) => {
+      if (postData.type === postType || postType === "load-more") {
+        console.log("post type: " + postData.type)
+        const postElement = buildPostElement(postData);
+
+      // append to bottom of page
+      postElementIDs = document.querySelectorAll(".post");
+      for (let i = 0; i < postElementIDs.length; i++) {
+        if (postElementIDs[i].id === postElement.id) {
+          postElement.setAttribute("style", "display: none;");
+        }
+          
+        }
+      
+
+      
+    
+        postsContainer.appendChild(postElement);
+    }});
+    currentPostData = [];
+    loadPosts();
+  }
+
+  function buildPostElement(postData) {
+    const postElement = document.createElement("div");
+      postElement.classList.add("post");
+      postElement.innerHTML = `<h2>${postData.title}</h2>`;
+      postElement.innerHTML += `<p>By: ${postData.by}</p>`;
+      postElement.innerHTML += `<p>Score: ${postData.score}</p>`;
+      postElement.innerHTML += `<p>Type: ${postData.type}</p>`;
+      if (postData.url) {
+        postElement.innerHTML += `<p><a href="${postData.url}" target="_blank">Source</a></p>`;
+      }
+      postElement.innerHTML += `<p>Created: ${new Date(postData.time * 1000).toLocaleString()}</p>`;
+      if (postData.descedants || postData.text) {
+        postElement.innerHTML += `<button class="expand-post">Expand Post</button>`;
+      }
+      if (postData.type === "poll") {
+        postElement.innerHTML += `<p>Options: ${postData.descendants}</p>`;
+        postElement.innerHTML += `<button class="expand-post">Expand Post</button>`;
+      }
+
+      postElement.id = postData.id;
+      return postElement;
+  }
+  
+
+  const createNewPostElements = () => {
+    newPostData.forEach((postData) => {
+      const postElement = buildPostElement(postData);
+      postElement.style.backgroundColor = "lightgreen";
+      // append to top of page
+      postsContainer.insertBefore(postElement, postsContainer.firstChild);
+      console.log(postsContainer);
+    });
+    newPostData = [];
+    newPostNotification();
+    loadPosts();
+  }
+
+  //expand post to show post text and comments
+  postsContainer.addEventListener("click", (e) => {
+    if (e.target.classList.contains("expand-post")) {
+        const parentElement = e.target.parentElement;
+        const postId = parentElement.id;
+        e.target.remove();
+
+        fetch(`https://hacker-news.firebaseio.com/v0/item/${postId}.json`).then((postRes) => postRes.json()).then((postData) => {
+          const postText = postData.text;
+          if (postText) {
+            const postTextElement = document.createElement("div");
+            postTextElement.classList.add("post-text"); 
+            postTextElement.innerHTML = `<p>${postText}</p>`;
+            parentElement.appendChild(postTextElement);
+          }
+
+          let postComments = postData.kids;
+          
+          if (postComments) {
+            const postCommentsElement = document.createElement("div");
+            postCommentsElement.classList.add("post-comments");
+            postCommentsElement.innerHTML = `<h3>Comments</h3>`;
+            parentElement.appendChild(postCommentsElement);
+
+            postComments = sortArr(postComments);
+            console.log(postComments);
+            for (let i = 0; i < postComments.length; i++) {
+              fetch(`https://hacker-news.firebaseio.com/v0/item/${postComments[i]}.json`).then((commentRes) => commentRes.json()).then((commentData) => {
+                if (commentData) {
+                  let commentText = commentData.text;
+                  let commentBy = commentData.by;
+                  const commentTime = commentData.time;
+
+                  if (commentData.deleted) {
+                    commentText = "Comment has been deleted";
+                    commentBy = "Unknown";
+                  }
+
+                  const commentElement = document.createElement("div");
+                  commentElement.classList.add("comment");
+                  commentElement.setAttribute("id", commentData.id);
+                  commentElement.innerHTML = `<p>${commentText}</p>`;
+                  commentElement.innerHTML += `<p>By: ${commentBy}</p>`;
+                  commentElement.innerHTML += `<p>Created: ${new Date(commentTime * 1000).toLocaleString()}</p>`;
+                  postCommentsElement.insertChildAtIndex(commentElement, i + 1);
+                }
+              });
+            }
+            console.log(postCommentsElement);
+          }
+        let pollOptions = postData.parts;
+        if (pollOptions) {
+          const pollOptionsElement = document.createElement("div");
+          let pollData = [];
+          let pollLabels = [];
+          pollOptionsElement.classList.add("poll-options");
+          pollOptionsElement.innerHTML = `<h3>Poll Options</h3>`;
+          parentElement.appendChild(pollOptionsElement);
+
+          pollOptions = sortArr(pollOptions);
+          console.log(pollOptions);
+          for (let i = 0; i < pollOptions.length; i++) {
+            fetch(`https://hacker-news.firebaseio.com/v0/item/${pollOptions[i]}.json`).then((optionRes) => optionRes.json()).then((optionData) => {
+              if (optionData) {
+                let optionText = optionData.text;
+                let optionScore = optionData.score;
+
+                if (optionData.deleted) {
+                  optionText = "Option has been deleted";
+                  optionBy = "Unknown";
+                }
+
+                const optionElement = document.createElement("div");
+                optionElement.classList.add("option");
+                optionElement.setAttribute("id", optionData.id);
+                optionElement.setAttribute("data-score", optionScore);
+                optionElement.setAttribute("data-text", optionText);
+
+                optionElement.innerHTML = `<p>${optionText} |</p><br>`;
+                optionElement.innerHTML += `<p>| Score: ${optionScore}</p>`;
+                pollOptionsElement.insertChildAtIndex(optionElement, i + 1);
+              }
+              
+            }).then(() => {
+
+              const pollOptionsElements = pollOptionsElement.querySelectorAll(".option");
+              console.log("polloptionelements", pollOptionsElements)
+              pollOptionsElements.forEach((option) => {
+                pollData.push(option.getAttribute("data-score"));
+                pollLabels.push(option.getAttribute("data-text"));
+              });
+
+            }).then(() => {
+              //generate myChart canvas
+              console.log("pollData", pollData);
+              console.log("pollLabels", pollLabels);
+              // remove doplicate labels and data
+              const uniqueLabels = [...new Set(pollLabels)];
+              const uniqueData = [...new Set(pollData)];
+              // empty arrays and push unique data
+              pollLabels = [];
+              pollData = [];
+              uniqueLabels.forEach((label) => {
+                pollLabels.push(label);
+              });
+              uniqueData.forEach((data) => {
+                pollData.push(data);
+              });
+            }).then(() => {
+              console.log("pollData", pollData);
+              console.log("pollLabels", pollLabels);
+            }).then(() => {
+
+              
+              const chartContainer = document.createElement("div");
+              chartContainer.classList.add("chart-container");
+              chartContainer.innerHTML = `<canvas id="myChart" width="100" height="100"></canvas>`;
+              const chartElements = parentElement.querySelectorAll(".chart-container");
+              if (chartElements.length === 0) {
+                parentElement.appendChild(chartContainer);
+              }
+
+              const ctx = document.getElementById("myChart").getContext("2d");
+              const myChart = new Chart(ctx, {
+                type: "bar",
+                data: {
+                  labels: pollLabels,
+                  datasets: [
+                    {
+                      label: "Poll Results",
+                      data: pollData,
+                      backgroundColor: [
+                        "rgba(255, 99, 132, 0.2)",
+                        "rgba(54, 162, 235, 0.2)",
+                        "rgba(255, 206, 86, 0.2)",
+                        "rgba(75, 192, 192, 0.2)",
+                        "rgba(153, 102, 255, 0.2)",
+                        "rgba(255, 159, 64, 0.2)",
+                        "rgba(255, 99, 132, 0.2)",
+                        "rgba(54, 162, 235, 0.2)",
+                        "rgba(255, 206, 86, 0.2)",
+                        "rgba(75, 192, 192, 0.2)",
+                        "rgba(153, 102, 255, 0.2)",
+                        "rgba(255, 159, 64, 0.2)",
+                      ],
+                      borderColor: [
+                        "rgba(255, 99, 132, 1)",
+                        "rgba(54, 162, 235, 1)",
+                        "rgba(255, 206, 86, 1)",
+                        "rgba(75, 192, 192, 1)",
+                        "rgba(153, 102, 255, 1)",
+                        "rgba(255, 159, 64, 1)",
+                        "rgba(255, 99, 132, 1)",
+                        "rgba(54, 162, 235, 1)",
+                        "rgba(255, 206, 86, 1)",
+                        "rgba(75, 192, 192, 1)",
+                        "rgba(153, 102, 255, 1)",
+                        "rgba(255, 159, 64, 1)",
+                      ],
+                      borderWidth: 1,
+                    },
+                  ],
+                },
+                options: {
+                  scales: {
+                    y: {
+                      beginAtZero: true,
+                    },
+                  },
+                },
+              });
+            });
+            
+          }
+          
+        
+
+        }
+        });
+
+        // add button to collapse post
+        const collapsePostButton = document.createElement("button");
+        collapsePostButton.classList.add("collapse-post");
+        collapsePostButton.innerHTML = "Collapse Post";
+        parentElement.appendChild(collapsePostButton);
+
+        // event listener for collapse post button
+        collapsePostButton.addEventListener("click", () => {
+          const postText = parentElement.querySelector(".post-text");
+          if (postText) {
+            postText.remove();
+          }
+          const postComments = parentElement.querySelector(".post-comments");
+          if (postComments) {
+            postComments.remove();
+          }
+          //remove collapse post button
+          collapsePostButton.remove();
+          parentElement.appendChild(e.target);
+        });
+    }
+  });
+
+  const newPostNotification = () => {
+    let notification;
+    const notificationSection = document.getElementsByClassName("notification");
+    const posts = document.getElementsByClassName("post");
+    let status = false;
+
+    [...posts].forEach((post) => {
+      if (post.style.backgroundColor === "lightgreen") {
+        status = true;
+      }
+    });
+
+    if (notificationSection.length === 0 && status) {
+      notification = document.createElement("div");
+      notification.innerHTML = "New posts have been loaded, click here to acknowledge!";
+      notification.classList.add("notification");
+
+      //append notification to always show on top of page
+      document.body.insertBefore(notification, document.body.firstChild);
+    } else if (notificationSection.length > 0) {
+      notification = notificationSection[0];
+    }
+
+    if (notification) {
+      notification.addEventListener("click", () => {
+        notification.remove();
+        const posts = document.getElementsByClassName("post");
+        [...posts].forEach((post) => {
+          post.style.backgroundColor = "lightcyan";
+        });
+      });
+    }
+  }
+
+  setInterval(checkForNewPosts, 5000);
+
+  
+
+  newest.addEventListener("click", () => {
+    newest.setAttribute("disabled", true);
+    postsContainer.innerHTML = "";
+    loadPosts("newest");
+  });
+
+  //polls button
+  polls.addEventListener("click", () => {
+    postsContainer.innerHTML = "";
+    loadPosts("poll");
+  });
+
+  
+
+//eventlistener for button with id="jobs"
+  jobs.addEventListener("click", () => {
+    postsContainer.innerHTML = "";
+    loadPosts("job");
+  });
+
+async function init() {
+  loadPosts();
+  newest.setAttribute("disabled", true);
+  postsContainer.innerHTML = "";
+  await loadPosts("newest");
+  //await createPostElements("story");
+  const loadBtn = await document.getElementById("load-more");
+  console.log("button"+loadBtn)
+  //click loadBtn only once after 0.5s
+  setTimeout(() => {
+    loadBtn.click();
+  }, 1500);
+
+}
+
+init();
+
+  </script>
+</body>
+</html>
