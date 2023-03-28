@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="images/fav.png">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Super Moomin</title>
+</head>
+<body>
+    <div id="startMenu">
+        <div class="overlay-content-container">
+            <div class="overlay-content-text">Super Moomin</div>
+            <div class="overlay-button" id="startGame">Start Game</div>
+            <div class="overlay-button" id="levelCreator">Level Creator</div>
+            <div class="overlay-button" id="MMScoreBoard">Score board</div>
+            <div class="overlay-option" id="toggleSoundDiv">Sound: <input type="checkbox" id="toggleSound"></div>
+        </div>
+    </div>
+    <div id="gameEnd" style="display:none;">
+        <div class="overlay-content-container">
+        <div class="overlay-content-text" id="gameEndMessage">GAME OVER!</div>
+        <div class="overlay-content-text">Enter your name for scoreboard:</div>
+        <div class="overlay-content-text">
+            <input class="overlay-content-text" type="text" id="playerName"></div>
+        <div class="overlay-button" id="saveRecord">Save Record</div>
+        <div class="overlay-button" id="tryAgain">Main Menu</div>
+        </div>
+    </div>
+    <div id="miscOverlay" class="overlay" style="display:none;">
+    </div>
+    <div id="overlay" class="overlay" style="display:none;">
+        <div class="overlay-content-container">
+            <div class="overlay-content-text">Super Moomin</div>
+            <div class="overlay-button" id="resume">Resume</div>
+            <div class="overlay-button" id="restart">Restart</div>
+            <div class="overlay-button" id="pauseToMainMenu">Main Menu</div>
+        </div>
+    </div>
+    <div id="leaderboard" style="display:none;">
+        <div class="overlay-content-container">
+            <div class="overlay-content-text">Leaderboard</div>
+            <div id="highscore" class="overlay-content-text">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Rank</th>
+                      <th>Name</th>
+                      <th>Score</th>
+                      <th>Time</th>
+                    </tr>
+                  </thead>
+                  <tbody id="table-body"></tbody>
+                </table>
+                <div class="pagination" id="pagination"></div>
+            </div>
+            <div class="overlay-button" id="backToMenu">Back to Menu</div>
+        </div>
+    </div>
+    <div id="topBar"></div>
+    <div id="mainContainer"></div>
+    <script type="module">
+        import {gameSetup, init} from "./scripts/main.js"
+        init()
+    </script>
+
+    <template id="diedOverlay">
+        <div class="overlay-content-container">
+            <div class="overlay-content-text" id="showLeve"></div>
+            <div class="overlay-content-text" id="showLives"></div>
+        </div>
+    </template>
+    <template id="nextLevel">
+        <div class="overlay-content-container">
+            <div class="overlay-content-text" id="levelData" class="py-1"></div>
+            <div class="overlay-content-text" id="bonusPoints" class="py-1"></div>
+            <div class="overlay-content-text" id="totalPoints" class="py-1"></div>
+            <div class="overlay-content-text">Prepare for next level</div>
+        </div>
+    </template>
+</body>
+</html>

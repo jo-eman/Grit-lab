@@ -1,0 +1,16 @@
+{
+  "name": "gritbros",
+  "version": "0.0.5",
+  "description": "Testing a game in console",
+  "main": "main.js",
+  "type": "module",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://01.gritlab.ax/git/adrian1206/make-your-game.git"
+  },
+  "author": "",
+  "license": "ISC"
+}

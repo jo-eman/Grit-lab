@@ -1,0 +1,264 @@
+body {
+    min-height: 700px;
+    overflow: hidden;
+}
+table {
+    width: 100%;
+}
+td {
+    width: 25%;
+}
+
+.character {
+    position: absolute;
+    display: inline-block;
+    z-index: 50;
+}
+
+
+
+.bullet {
+    position: absolute;
+    display: inline-block;
+    z-index: 20;
+    border-radius: 50%;
+}
+
+.tracker {
+    position: absolute;
+    display: inline-block;
+    background-color: purple;
+    opacity: 0.2;
+    z-index: 0;
+}
+
+.obstacle {
+    position: absolute;
+    display: inline-block;
+    z-index: 1;
+    transition: opacity 2s;
+}
+.transparentObstacle {
+    opacity: 0;
+}
+
+.monster {
+    position: absolute;
+    display: inline-block;
+    z-index: 20;
+}
+
+.collectible {
+    position: absolute;
+    display: inline-block;
+    z-index: 10;
+}
+
+.topBarElement {
+    margin-top: 15px;
+    display: inline-block;
+    text-align: center;
+    font-size: 3vh;
+    font-family: Arial, Helvetica, sans-serif;
+    color: white;
+    text-shadow: 0px 5px 3px black;
+}
+
+.topElementScoreWidth {
+    width: 20%;
+}
+
+.topElementWidth {
+    width: 20%;
+}
+
+.topElementButton {
+    transform: scale(2);
+    margin-left: 2%;
+}
+
+.topElementLabel {
+    padding-left: 5%;
+}
+
+#topBar {
+    position: fixed;
+    z-index: 10;
+    width: 100%;
+}
+
+#mainContainer {
+    background-size: contain;
+    background-repeat: repeat-x;
+    min-height: 700px;
+}
+
+.page-link {
+    cursor : pointer;
+    box-shadow : 0px 2px 2px black;
+    margin-top: 5px;
+    border-radius : 20%;
+    padding : 5px;
+}
+
+.page-link.active{
+    box-shadow : 0px 0px 0px black;
+    color: grey;
+}
+.page-link:hover{
+    box-shadow : 0px 1px 1px black;
+}
+#gameEnd {
+    position: fixed; /* Sit on top of the page content */
+    width: 100%; /* Full width (cover the whole page) */
+    height: 100%; /* Full height (cover the whole page) */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 500;
+    background-color: rgba(47, 32, 146, 0.2); /* Black background with opacity */
+    justify-content: center;
+}
+
+#leaderboard {
+    position: fixed; /* Sit on top of the page content */
+    width: 100%; /* Full width (cover the whole page) */
+    height: auto; /* Full height (cover the whole page) */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 500;
+    background-color: rgba(47, 32, 146, 0.2); /* Black background with opacity */
+    justify-content: center;
+}
+
+#game-end-container {
+    margin: auto;
+    padding: 30% 45%;
+    opacity: 1.0;
+}
+
+#startMenu {
+    position: fixed; /* Sit on top of the page content */
+    width: 100%; /* Full width (cover the whole page) */
+    height: 100%; /* Full height (cover the whole page) */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.2); /* Black background with opacity */
+    z-index: 1000; /* Specify a stack order in case you're using a different order for other elements */
+    cursor: pointer; /* Add a pointer on hover */
+}
+
+.overlay {
+    position: fixed; /* Sit on top of the page content */
+    width: 100%; /* Full width (cover the whole page) */
+    height: 100%; /* Full height (cover the whole page) */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.5); /* Black background with opacity */
+    z-index: 1000; /* Specify a stack order in case you're using a different order for other elements */
+}
+
+.overlay-content-container {
+    width: 50%;
+    height: auto;
+    margin: 12.5% auto;
+    padding: 8% 0;
+    background: white;
+    border-radius: 30px;
+}
+
+.overlay-content-text {
+    width:90%;
+    margin:auto;
+    font-weight:bold;
+    font-size: 220%;
+    color: black;
+    margin-top:1%;
+    text-align: center;
+}
+
+.overlay-button {
+    width: 65%;
+    margin: 35px auto;
+    padding: 10px 16px;
+    background-color: blue;
+    border-radius: 25px;
+    text-align:center;
+    color: white;
+    font-size: 170%;
+    cursor: pointer; /* Add a pointer on hover */
+}
+
+.overlay-option {
+    width: 65%;
+    margin: 35px auto;
+    padding: 10px 16px;
+    color: black;
+    text-align: left;
+    font-size: 170%;
+}
+
+input[type=checkbox] {
+    width: 35px;
+    height: 35px;
+}
+
+.hidden {
+    display: none;
+}
+
+.creatorDropdown {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 150%;
+    font: inherit;
+    vertical-align: baseline;
+    background: transparent;
+    color: white;
+    text-align: center;
+    text-shadow: 0px 5px 3px black;
+}
+
+
+.invincible {
+    opacity: 0.5;
+
+    animation: blink-animation 0.5s steps(5, start) infinite;
+    -webkit-animation: blink-animation 0.5s steps(5, start) infinite;
+  }
+  @keyframes blink-animation {
+    to {
+      visibility: hidden;
+    }
+  }
+  @-webkit-keyframes blink-animation {
+    to {
+      visibility: hidden;
+    }
+
+}
+
+.leaderboard {
+    position: fixed;
+    z-index: 10;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.2); /* Black background with opacity */
+    justify-content: center;
+}
+
+.py-1 {
+    padding: 1em 0px;
+}
