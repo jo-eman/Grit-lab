@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The Bored Board</title>
+    <link rel="stylesheet" href="./css/index.css" />
+    <link rel="stylesheet" type="text/css" href="./css/modal.css">
+  </head>
+  <body class="body">
+    
+    <!-- Navigation bar -->
+    <div class="navbar">
+      <a class="navbarbutton" href="#/">Home</a>
+      <a class="navbarbutton loggedin" href="#/create-post">Create Post</a>
+      <a class="navbarbutton loggedout" href="#/register">Register</a>
+      <a class="navbarbutton loggedout" href="#/login">Login</a>
+      <a class="navbarbutton loggedin" id="nav-username" >Username</a>
+      <a class="navbarbutton loggedin" onclick="logOut()">Logout</a>
+    </div>
+    <div class="users-modal loggedin">
+      <div class="users-header">Chat</div>
+      <div id="users-list"></div>
+    </div>
+  </div>
+
+
+    <!-- Main content -->
+    <div id="app"></div>
+    <div id="content"></div>
+    <!-- JavaScript files -->
+    <script src="./js/configurestatus.js"></script>
+    <script src="./js/varStorage.js"></script>
+    <script src="./js/login.js"></script>
+    <script src="./js/logout.js"></script>
+    <script src="./js/chat.js"></script>
+    <script src="./js/home.js"></script>
+    <script src="./js/register.js"></script>
+    <script src="./js/create-post.js"></script>
+    <script src="./js/router.js"></script>
+
+    <!-- load Home -->
+    <script>
+      window.location.hash = "#/";
+    </script>
+
+  </body>
+</html>

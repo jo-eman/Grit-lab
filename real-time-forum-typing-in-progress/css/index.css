@@ -1,0 +1,355 @@
+.body {
+    background-color: #f0f0f0;
+	background-image: repeating-conic-gradient(red 10%, yellow 20%);
+	/*backgroundsize at least same as the size of the window*/
+	min-height: 100vh;
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 28px;
+    color: #333;
+    margin: 0;
+    padding-top: 120px; /* add padding equal to navbar height plus some extra */
+	flex-direction: column;
+	background-color: #e5e5f7;
+	margin-right: 15%;
+background: linear-gradient(135deg, #45cdf755 25%, transparent 25%) -12px 0/ 24px 24px, linear-gradient(225deg, #45cdf7 25%, transparent 25%) -12px 0/ 24px 24px, linear-gradient(315deg, #45cdf755 25%, transparent 25%) 0px 0/ 24px 24px, linear-gradient(45deg, #45cdf7 25%, #e5e5f7 25%) 0px 0/ 24px 24px;
+}
+
+app {
+    background-color: #fff;
+    margin: 0 auto;
+    padding: 0 20px;
+    max-width: 800px;
+}
+.btn { 
+display: flex;
+justify-content: center;
+align-items: center;
+margin: 0 auto;
+}
+
+
+
+.notification {
+	display: flex;
+	align-items: center;
+	background-color: #ffdddd;
+	color: #ff3333;
+	border: 1px solid #ff3333;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+	padding: 10px;
+	margin-right: 20px;
+	display: none;
+	font-size: medium;
+	text-align: center;
+	margin: 0 auto; /* center horizontally */
+  }
+
+
+.users-modal {
+	background-color: #fff;
+	margin: 0 auto;
+	padding: 0 20px;
+	max-width: 800px;
+	flex-direction: column;
+	/* add a drop shadow to the modal */
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+	/* make the modal slightly transparent */
+	background-color: rgba(255, 255, 255, 0.9);
+	/* add a border to the modal */
+	border: 2px;
+	
+	border-style: solid;
+	
+	border-color: #000000;
+	
+	border-radius: 5px;
+	
+	font-size: 16px;
+	
+	padding: 10px 20px;
+
+	transition: background-color 0.3s ease-in-out;
+
+	display: flex;
+
+	align-items: flex-end;
+	size: 25%;
+	/* align the modal to the right of the page */
+	justify-content: flex-end;
+	/* display the modal on the right side of the page */
+	position: absolute;
+	top: 130px;
+	right: 0;
+	margin-right: 20px;
+	margin-left: 85%;
+  }
+
+
+
+
+
+
+.users-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	height: 10%;
+	background-color: #eee;
+	border-bottom: 1px solid #ddd;
+}
+
+.users-list {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	overflow-y: auto;
+}
+
+.subject {
+	
+	font-size: 20px;
+	font-weight: bold;
+	margin: 2px;
+	padding: 2px;
+	border: 2px;
+	border-style: solid;
+	border-color: #000000;
+	border-radius: 5px;
+	background-color: rgb(255, 255, 255);
+	width: max-content;
+	display: inline-block;
+	margin-right: 10px;
+	float: left;
+  }
+
+.message {
+    margin: 0;
+    padding: 0;
+}
+.title {
+    display: flex;
+  justify-content: center;
+  /* font size of the title */
+  font-size: 40px;
+}
+
+.comments {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	margin: 5px;
+	padding: 5px;
+	cursor: pointer;
+	/* add a drop shadow to the comments */
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+	background-color: #45cdf6;
+	/* round the corners of the comments */
+	border-radius: 5px;
+
+}
+
+.register {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: white;
+	border: 2px solid black;
+	border-radius: 10px;
+	box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+	width: max-content;
+	margin: 0 auto;
+	padding: 20px;
+	margin-top: 5%;
+  }
+.form-group {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 5px;
+  }
+  
+  .formInput {
+	flex: 1;
+	margin-left: 10px;
+	
+  }
+  .login {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: white;
+	border: 2px solid black;
+	border-radius: 10px;
+	box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+	width: max-content;
+	margin: 0 auto;
+	padding: 20px;
+	margin-top: 5%;
+  }
+.create-post {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	margin: 0 auto;
+	margin-top: 2%;
+	
+}
+.create-post-container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: white;
+	border: 2px solid black;
+	border-radius: 10px;
+	box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+	width: max-content + 20px;
+	margin: 0 auto;
+	padding: 20px;
+	margin-top: 5%;
+  }
+
+.create-post-form {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	margin: 0;
+	padding: 0;
+	/* add a drop shadow to the comments */
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+	/* font size of the comments */
+	font-size: 10px;
+}
+
+.introduction {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: rgb(255, 255, 255);
+	border: 2px solid black;
+	border-radius: 10px;
+	box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+	width: max-content;
+	margin: 0 auto;
+	padding: 20px;
+	margin-top: 2%;
+	width: 80%;
+}
+.titlehome  {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: rgb(255, 255, 255);
+	border: 2px solid black;
+	border-radius: 10px;
+	box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+	width: max-content;
+	margin: 0 auto;
+	padding: 20px;
+	margin-top: 2%;
+	width: max-content;
+	margin-bottom: 2%;
+}
+
+		/* Style the navigation bar */
+		.navbar {
+			background-color: rgba(31, 203, 255); /* make the navbar slightly transparent */
+			position: absolute;
+			top: 20px;
+			left: 0;
+			right: 0;
+			height: 70px;
+			padding: 10px;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			z-index: 999;
+			box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* add a drop shadow to the navbar */
+            border: 2px;
+            border-style: solid;
+            border-color: #000000;
+			
+		}
+
+/* Style the navbar button */
+.navbarbutton {
+	background-color: white;
+	color: rgba(31, 203, 255, 0.7);
+	border: 2px;
+    border-color: #000000; 
+    border-style: solid;
+	border-radius: 5px;
+	font-size: 16px;
+	padding: 10px 20px;
+	cursor: pointer;
+	transition: background-color 0.3s ease-in-out;
+}
+
+/* Add hover effect to navbar button */
+.navbarbutton:hover {
+	background-color: rgba(31, 203, 255, 0.7);
+	color: white;
+}
+
+.comment {
+	display: flex;
+	justify-content: center;
+
+	align-items: center;
+
+	flex-direction: column;
+	margin: 10px;
+	padding: 10px;
+	border: 2px;
+	border-style: solid;
+	border-color: #000000;
+	border-radius: 5px;
+	background-color: lightpink;
+	
+}
+
+/* this is comment author */
+.username {
+	font-weight: bold;
+	font-size: 20px;
+}
+
+/* this is comment text */
+.content {
+	font-size: 16px;
+	
+}
+
+.message, .message-from, .message-timestamp {
+	
+	display: flex;
+	justify-content: stretch;
+	align-content: space-around;
+	block-size: auto;
+	
+	align-items: stretch;
+	flex-direction: row;
+	margin: 2px;
+	padding: 2px;
+	border: 2px;
+	border-style: solid;
+	border-color: #000000;
+	border-radius: 5px;
+	background-color: lightyellow;
+	text-size-adjust: 10%;
+	font-size: 80%;
+}
+
+.message-content {
+	margin: 2px;
+	padding: 2px;
+	text-size-adjust: 10%;
+	font-size: 80%;
+}
+
+  
